@@ -1,5 +1,6 @@
 require 'curb'
 require 'github_api'
+require 'json'
 require 'nokogiri'
 
 class Feed
@@ -32,5 +33,10 @@ class Feed
     end
     curl.perform
     Nokogiri::HTML(curl.body_str)
+  end
+
+  def json(url)
+    resp = Curl.get(url)
+    JSON.parse(resp.body_str)
   end
 end
