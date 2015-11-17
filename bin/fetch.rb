@@ -17,9 +17,31 @@ end.parse!
 
 name = ARGV.first
 
-feed = Brewski.fetch(name)
+brew = Brewski.fetch(name)
+
+puts
+
+if brew.formula.stable.version.to_s == brew.feed.version
+  vdiff = '(current)'
+else
+  vdiff = "(new, current: #{brew.formula.stable.version})"
+end
+
 output =<<EOF
-version: #{feed.version}
-url: #{feed.url}
+version: #{brew.feed.version} #{vdiff}
+url: #{brew.feed.url}
 EOF
 puts output
+
+if options[:write] && brew.formula.stable.version.to_s != brew.feed.version
+  old_version = brew.formula.stable.version.to_s
+  new_version = brew.feed.version
+
+  old_sha256 = brew.formula.stable.checksum.to_s
+  new_sha256 = Brewski.shasum(brew.feed.url)
+
+  formula = Brewski.read_formula(name)
+  formula.gsub!(/#{old_version}/, new_version)
+  formula.gsub!(/#{old_sha256}/, new_sha256)
+  Brewski.write_formula(name, formula)
+end

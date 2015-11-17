@@ -13,7 +13,7 @@ require 'feed'
 HOMEBREW_PATH = Pathname.new(`brew --repository`.strip).realpath
 HOMEBREW_FORMULA_PATH = HOMEBREW_PATH.join('Library', 'Formula')
 HOMEBREW_LIBRARY_PATH = HOMEBREW_PATH.join('Library', 'Homebrew')
-$:.unshift HOMEBREW_FORMULA_PATH
+#$:.unshift HOMEBREW_FORMULA_PATH
 $:.unshift HOMEBREW_LIBRARY_PATH
 require 'global'
 require 'formula'
