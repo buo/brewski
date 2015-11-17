@@ -19,8 +19,6 @@ name = ARGV.first
 
 brew = Brewski.fetch(name)
 
-puts
-
 if brew.formula.stable.version.to_s == brew.feed.version
   vdiff = '(current)'
 else
