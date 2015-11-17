@@ -3,7 +3,8 @@ require 'github_api'
 require 'nokogiri'
 
 class Feed
-  attr_reader :url, :version
+  attr_reader :version
+  attr_reader :url, :sha256
 
   def initialize(name)
     @name = name

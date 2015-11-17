@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require 'hashie'
 require 'pathname'
 
 BREWSKI_PATH = Pathname.new(__FILE__).realpath.parent.parent
@@ -8,6 +9,7 @@ BREWSKI_LIBRARY_PATH = BREWSKI_PATH.join('lib')
 $:.unshift BREWSKI_PATH
 $:.unshift BREWSKI_LIBRARY_PATH
 require 'brewski/config'
+require 'brewski/shasum'
 require 'feed'
 
 HOMEBREW_PATH = Pathname.new(`brew --repository`.strip).realpath
@@ -32,6 +34,13 @@ module Brewski
   end
 
   def self.fetch(name)
+    mash = Hashie::Mash.new
+    mash.feed = load_feed(name)
+    mash.formula = load_formula(name)
+    mash
+  end
+
+  def self.load_feed(name)
     path = BREWSKI_FEED_PATH.join("#{name}.rb")
     contents = File.open(path, 'rb') do |handle|
       handle.read
@@ -41,8 +50,20 @@ module Brewski
     feed
   end
 
-  def load_formula(name)
+  def self.load_formula(name)
     path = HOMEBREW_FORMULA_PATH.join("#{name}.rb")
     Formulary.load_formula_from_path(name, path)
+  end
+
+  def self.read_formula(name)
+    path = HOMEBREW_FORMULA_PATH.join("#{name}.rb")
+    path.open("r").read
+  end
+
+  def self.write_formula(name, contents)
+    path = HOMEBREW_FORMULA_PATH.join("#{name}.rb")
+    path.open("w") do |f|
+      f.write contents
+    end
   end
 end
