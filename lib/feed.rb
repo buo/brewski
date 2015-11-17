@@ -1,4 +1,5 @@
 require 'curb'
+require 'github_api'
 require 'nokogiri'
 
 class Feed
@@ -10,6 +11,16 @@ class Feed
 
   def get_binding
     binding()
+  end
+
+  def github(owner, repo, options = {})
+    options[:draft] = false if options[:draft].nil?
+    options[:prerelease] = false if options[:prerelease].nil?
+    hub = Github.new oauth_token: Brewski.config["github_token"]
+    releases = hub.repos.releases.list owner: owner, repo: repo
+    releases = releases.select do |release|
+      release.draft == options[:draft] and release.prerelease == options[:prerelease]
+    end
   end
 
   def html(url)

@@ -7,6 +7,7 @@ BREWSKI_FEED_PATH = BREWSKI_PATH.join('feed')
 BREWSKI_LIBRARY_PATH = BREWSKI_PATH.join('lib')
 $:.unshift BREWSKI_PATH
 $:.unshift BREWSKI_LIBRARY_PATH
+require 'brewski/config'
 require 'feed'
 
 HOMEBREW_PATH = Pathname.new(`brew --repository`.strip).realpath
